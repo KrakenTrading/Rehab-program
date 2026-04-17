@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADF PTI — Rehabilitation Program Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --olive: #4a5240;
+    --olive-light: #6b7260;
+    --olive-pale: #e8ead4;
+    --tan: #c9b99a;
+    --tan-dark: #a0926e;
+    --cream: #f5f2eb;
+    --sand: #ede8dc;
+    --charcoal: #2a2d26;
+    --text: #1e211b;
+    --text-muted: #5a5f52;
+    --border: #c8c9b8;
+    --accent: #7d8c3a;
+    --accent-dark: #5a6628;
+    --danger: #8b3a2a;
+    --success: #3a6b3a;
+    --white: #ffffff;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --radius: 4px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 0 2rem;
+    display: flex;
+    align-items: stretch;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .header-flag {
+    background: var(--accent);
+    width: 6px;
+    margin-right: 1.5rem;
+  }
+
+  .header-content {
+    padding: 1.25rem 0;
+  }
+
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--tan);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--tan);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .header-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--tan);
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .app-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    min-height: calc(100vh - 72px);
+  }
+
+  /* SIDEBAR / FORM */
+  .sidebar {
+    background: var(--sand);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--olive-light);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--olive);
+  }
+
+  input, select, textarea {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    color: var(--text);
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(125,140,58,0.15);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* INJURY TAGS */
+  .injury-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .injury-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--olive-pale);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--accent-dark);
+    font-weight: 500;
+  }
+
+  .injury-tag button {
+    background: none;
+    border: none;
+    color: var(--accent-dark);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    width: auto;
+    opacity: 0.7;
+  }
+
+  .injury-tag button:hover { opacity: 1; }
+
+  .add-injury-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .add-injury-row input { flex: 1; }
+
+  .btn-add {
+    background: var(--olive);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    font-family: 'Barlow', sans-serif;
+    transition: background 0.15s;
+  }
+
+  .btn-add:hover { background: var(--accent-dark); }
+
+  /* RANGE FIELD */
+  .range-group { gap: 4px; }
+
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .range-row input[type=range] { flex: 1; accent-color: var(--accent); }
+
+  .range-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-dark);
+    min-width: 20px;
+    text-align: right;
+  }
+
+  /* CHECKBOX GROUP */
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 5px 6px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    transition: background 0.1s;
+  }
+
+  .check-item:hover { background: var(--olive-pale); border-color: var(--border); }
+
+  .check-item input[type=checkbox] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* GENERATE BUTTON */
+  .btn-generate {
+    width: 100%;
+    background: var(--charcoal);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-generate:hover { background: var(--accent-dark); }
+  .btn-generate:active { transform: scale(0.99); }
+  .btn-generate:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  /* SPINNER */
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* OUTPUT PANEL */
+  .output-panel {
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    text-align: center;
+    opacity: 0.5;
+  }
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 28px;
+  }
+
+  .empty-state h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .empty-state p { font-size: 13px; color: var(--text-muted); }
+
+  /* REPORT */
+  .report-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--charcoal);
+  }
+
+  .report-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .report-title span { color: var(--accent); }
+
+  .report-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .report-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--charcoal);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .btn-secondary:hover { background: var(--sand); }
+
+  /* MEMBER SUMMARY CARD */
+  .member-card {
+    background: var(--charcoal);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .member-stat label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--tan);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .member-stat .val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  /* PROGRAM CONTENT */
+  .program-content {
+    line-height: 1.7;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+
+  .program-content h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .program-content h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .program-content h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin: 1rem 0 0.4rem;
+  }
+
+  .program-content p { margin-bottom: 0.6rem; }
+
+  .program-content ul, .program-content ol {
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .program-content li { margin-bottom: 3px; }
+
+  .program-content strong { font-weight: 600; color: var(--charcoal); }
+
+  .program-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1rem;
+    font-size: 13.5px;
+  }
+
+  .program-content th {
+    background: var(--charcoal);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .program-content td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .program-content tr:nth-child(even) td { background: var(--sand); }
+
+  .caution-box {
+    background: #fdf5ec;
+    border-left: 4px solid #c97c2a;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    margin: 1rem 0;
+    font-size: 13.5px;
+  }
+
+  .caution-box strong { color: #8a5010; }
+
+  .disclaimer {
+    background: var(--sand);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-top: 2rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* STREAMING CURSOR */
+  .cursor::after {
+    content: '▋';
+    animation: blink 0.8s step-end infinite;
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* PRINT */
+  @media print {
+    .sidebar, header .header-badge, .report-actions { display: none; }
+    .app-layout { grid-template-columns: 1fr; }
+    .output-panel { padding: 1rem; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .app-layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    .member-card { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 0 1rem; }
+    .output-panel { padding: 1rem; }
+    .sidebar { padding: 1rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .member-card { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-flag"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Australian Defence Force</div>
+    <h1>PTI <span>Rehab</span> Planner</h1>
+    <div class="header-sub">Physical Training Instructor — Rehabilitation Program Generator</div>
+  </div>
+  <div class="header-badge">
+    <div class="badge">AI Powered</div>
+  </div>
+</header>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR FORM -->
+  <div class="sidebar">
+
+    <div class="section-label">Member Details</div>
+    <div class="form-grid" style="margin-bottom:1.5rem;">
+      <div class="form-group full">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="e.g. CPL Smith, J.">
+      </div>
+      <div class="form-group">
+        <label>Service Number</label>
+        <input type="text" id="svc" placeholder="e.g. 8123456">
+      </div>
+      <div class="form-group">
+        <label>Rank</label>
+        <select id="rank">
+          <option value="">— Select —</option>
+          <optgroup label="Army">
+            <option>Private</option><option>Lance Corporal</option><option>Corporal</option>
+            <option>Sergeant</option><option>Staff Sergeant</option><option>Warrant Officer Class 2</option>
+            <option>Warrant Officer Class 1</option><option>2nd Lieutenant</option><option>Lieutenant</option>
+            <option>Captain</option><option>Major</option><option>Lieutenant Colonel</option><option>Colonel</option>
+          </optgroup>
+          <optgroup label="Navy">
+            <option>Seaman</option><option>Able Seaman</option><option>Leading Seaman</option>
+            <option>Petty Officer</option><option>Chief Petty Officer</option><option>Warrant Officer</option>
+            <option>Midshipman</option><option>Sub Lieutenant</option><option>Lieutenant (RAN)</option>
+            <option>Lieutenant Commander</option><option>Commander</option><option>Captain (RAN)</option>
+          </optgroup>
+          <optgroup label="Air Force">
+            <option>Aircraftman</option><option>Leading Aircraftman</option><option>Corporal (RAAF)</option>
+            <option>Sergeant (RAAF)</option><option>Flight Sergeant</option><option>Warrant Officer (RAAF)</option>
+            <option>Pilot Officer</option><option>Flying Officer</option><option>Flight Lieutenant</option>
+            <option>Squadron Leader</option><option>Wing Commander</option><option>Group Captain</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Age</label>
+        <input type="number" id="age" placeholder="e.g. 28" min="17" max="65">
+      </div>
+      <div class="form-group">
+        <label>Sex</label>
+        <select id="sex">
+          <option value="">— Select —</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Corps / Mustering</label>
+        <input type="text" id="corps" placeholder="e.g. Infantry, Pilot">
+      </div>
+    </div>
+
+    <div class="section-label">Injury Details</div>
+    <div style="margin-bottom:1.5rem;">
+
+      <div class="form-group" style="margin-bottom:10px;">
+        <label>Injuries / Conditions</label>
+        <div class="injury-tags" id="injuryTags"></div>
+        <div class="add-injury-row">
+          <input type="text" id="injuryInput" placeholder="e.g. Right knee ACL tear" 
+                 onkeydown="if(event.key==='Enter'){addInjury();}">
+          <button class="btn-add" onclick="addInjury()">+ Add</button>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Onset</label>
+          <select id="onset">
+            <option value="">— Select —</option>
+            <option>Acute (< 6 weeks)</option>
+            <option>Sub-acute (6–12 weeks)</option>
+            <option>Chronic (> 12 weeks)</option>
+            <option>Recurring</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mechanism</label>
+          <select id="mechanism">
+            <option value="">— Select —</option>
+            <option>Training injury</option>
+            <option>Operational injury</option>
+            <option>Sport / recreation</option>
+            <option>Overuse / gradual onset</option>
+            <option>Post-surgical</option>
+            <option>Motor vehicle accident</option>
+            <option>Unknown / other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group range-group" style="margin-top:10px;">
+        <label>Pain Level (0–10)</label>
+        <div class="range-row">
+          <input type="range" id="pain" min="0" max="10" value="4" step="1"
+                 oninput="document.getElementById('painVal').textContent=this.value">
+          <span class="range-val" id="painVal">4</span>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:10px;">
+        <label>Medical / Physio Clearance Notes</label>
+        <textarea id="medNotes" placeholder="e.g. Cleared for non-weight-bearing upper body. No running until 8 weeks post-op."></textarea>
+      </div>
+    </div>
+
+    <div class="section-label">Fitness & Restrictions</div>
+    <div style="margin-bottom:1.5rem;">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Pre-injury fitness level</label>
+          <select id="fitness">
+            <option>High (exceeds BEEP standards)</option>
+            <option>Moderate (meets BEEP standards)</option>
+            <option>Below standard</option>
+            <option>Unknown</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Program Duration Goal</label>
+          <select id="duration">
+            <option>4 weeks</option>
+            <option>6 weeks</option>
+            <option>8 weeks</option>
+            <option>12 weeks</option>
+            <option>16 weeks</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Sessions Per Week</label>
+          <select id="sessions">
+            <option>3 sessions/week</option>
+            <option>4 sessions/week</option>
+            <option>5 sessions/week</option>
+            <option>Daily</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Equipment Access</label>
+          <select id="equipment">
+            <option>Full gym + pool</option>
+            <option>Full gym only</option>
+            <option>Minimal (bands, bodyweight)</option>
+            <option>Field environment (minimal)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:10px;">
+        <label>Movement Restrictions (tick all that apply)</label>
+        <div class="check-grid" id="restrictions" style="margin-top:5px;">
+          <label class="check-item"><input type="checkbox" value="No running"> No running</label>
+          <label class="check-item"><input type="checkbox" value="No jumping"> No jumping</label>
+          <label class="check-item"><input type="checkbox" value="No weight bearing"> Non-weight-bearing</label>
+          <label class="check-item"><input type="checkbox" value="No overhead lifting"> No overhead lifting</label>
+          <label class="check-item"><input type="checkbox" value="No spinal loading"> No spinal loading</label>
+          <label class="check-item"><input type="checkbox" value="No twisting/rotation"> No twisting</label>
+          <label class="check-item"><input type="checkbox" value="No push/pull"> No push/pull</label>
+          <label class="check-item"><input type="checkbox" value="Pool only"> Pool only</label>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:10px;">
+        <label>Return-to-Duty Goal / Special Notes</label>
+        <textarea id="goalNotes" placeholder="e.g. Must be RTD for Ex TALISMAN SABRE in 10 weeks. Member is a combat diver — swimming fitness priority."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generateProgram()">
+      <span id="btnText">Generate Rehab Program</span>
+    </button>
+
+  </div>
+
+  <!-- OUTPUT PANEL -->
+  <div class="output-panel" id="outputPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">+</div>
+      <h2>No Program Generated</h2>
+      <p>Fill in the member's details and injury information,<br>then press Generate Rehab Program.</p>
+    </div>
+    <div id="reportArea" style="display:none;"></div>
+  </div>
+
+</div>
+
+<script>
+const injuries = [];
+
+function addInjury() {
+  const input = document.getElementById('injuryInput');
+  const val = input.value.trim();
+  if (!val) return;
+  injuries.push(val);
+  renderTags();
+  input.value = '';
+  input.focus();
+}
+
+function removeInjury(i) {
+  injuries.splice(i, 1);
+  renderTags();
+}
+
+function renderTags() {
+  const container = document.getElementById('injuryTags');
+  container.innerHTML = injuries.map((inj, i) =>
+    `<div class="injury-tag">${inj}<button onclick="removeInjury(${i})" title="Remove">×</button></div>`
+  ).join('');
+}
+
+function getChecked(containerId) {
+  return [...document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`)]
+    .map(cb => cb.value);
+}
+
+function collectData() {
+  return {
+    name: document.getElementById('name').value.trim() || 'Unknown Member',
+    svc: document.getElementById('svc').value.trim() || 'N/A',
+    rank: document.getElementById('rank').value || 'N/A',
+    age: document.getElementById('age').value || 'N/A',
+    sex: document.getElementById('sex').value || 'N/A',
+    corps: document.getElementById('corps').value.trim() || 'N/A',
+    injuries: [...injuries],
+    onset: document.getElementById('onset').value || 'Not specified',
+    mechanism: document.getElementById('mechanism').value || 'Not specified',
+    pain: document.getElementById('pain').value,
+    medNotes: document.getElementById('medNotes').value.trim() || 'None provided',
+    fitness: document.getElementById('fitness').value,
+    duration: document.getElementById('duration').value,
+    sessions: document.getElementById('sessions').value,
+    equipment: document.getElementById('equipment').value,
+    restrictions: getChecked('restrictions'),
+    goalNotes: document.getElementById('goalNotes').value.trim() || 'None'
+  };
+}
+
+function buildMemberCard(d) {
+  return `
+    <div class="member-card">
+      <div class="member-stat"><label>Member</label><div class="val">${d.rank} ${d.name}</div></div>
+      <div class="member-stat"><label>Svc No.</label><div class="val">${d.svc}</div></div>
+      <div class="member-stat"><label>Age / Sex</label><div class="val">${d.age} / ${d.sex.charAt(0) || '—'}</div></div>
+      <div class="member-stat"><label>Corps</label><div class="val">${d.corps}</div></div>
+    </div>`;
+}
+
+function buildPrompt(d) {
+  const injList = d.injuries.length > 0 ? d.injuries.join(', ') : 'Not specified';
+  const restList = d.restrictions.length > 0 ? d.restrictions.join(', ') : 'None indicated';
+
+  return `You are an expert military rehabilitation physiotherapist and Physical Training Instructor (PTI) for the Australian Defence Force (ADF). Generate a detailed, professional, evidence-based rehabilitation program for the following member.
+
+MEMBER DETAILS:
+- Name: ${d.name}
+- Rank: ${d.rank}
+- Age: ${d.age} | Sex: ${d.sex}
+- Corps / Mustering: ${d.corps}
+
+INJURY DETAILS:
+- Injury/Condition(s): ${injList}
+- Onset: ${d.onset}
+- Mechanism: ${d.mechanism}
+- Current pain level: ${d.pain}/10
+- Medical/Physio clearance notes: ${d.medNotes}
+
+FITNESS & PROGRAM PARAMETERS:
+- Pre-injury fitness: ${d.fitness}
+- Program duration goal: ${d.duration}
+- Sessions per week: ${d.sessions}
+- Equipment available: ${d.equipment}
+- Movement restrictions: ${restList}
+- RTD goal / special notes: ${d.goalNotes}
+
+Generate a full rehabilitation program in the following format using Markdown-compatible headings:
+
+## Injury Assessment Summary
+Brief clinical summary of the condition, likely tissue involvement, and rehab rationale.
+
+## Rehabilitation Goals
+List specific, measurable, time-bound goals (STG and LTG) for this member.
+
+## Phase-by-Phase Program
+Break into phases (e.g. Phase 1 – Acute/Protection, Phase 2 – Sub-Acute/Repair, Phase 3 – Functional Restoration, Phase 4 – RTD Conditioning). For each phase include:
+- Duration and objective
+- A table of exercises (exercise name, sets, reps/duration, notes)
+- Progression criteria to advance to next phase
+
+## Cardiovascular Maintenance
+How to maintain cardiovascular fitness within restrictions (cross-training, hydrotherapy, etc.)
+
+## Pain & Load Management
+Guidelines for the PTI and member on load management, pain monitoring, and red-flag signs to pause training.
+
+## Return to Duty (RTD) Criteria
+Functional benchmarks the member must achieve before unrestricted RTD. Reference ADF fitness assessment standards (BEEP test, push-ups, sit-ups) where relevant.
+
+## PTI Monitoring Checklist
+A practical weekly checklist for the PTI to track progress.
+
+Use clear, professional language appropriate for ADF. Use tables for exercise programs. Be specific with sets, reps, and progressions. Include safety cautions where appropriate. Do not recommend any exercises that contradict the stated restrictions.`;
+}
+
+function renderMarkdown(text) {
+  return text
+    .replace(/## (.+)/g, '<h2>$1</h2>')
+    .replace(/### (.+)/g, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)/gm, '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)/gm, '<li>$2</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hup])/gm, '')
+    .replace(/\|(.+)\|/g, (line) => {
+      const cells = line.split('|').filter(c => c.trim());
+      return '<tr>' + cells.map(c => {
+        const trimmed = c.trim();
+        return `<td>${trimmed}</td>`;
+      }).join('') + '</tr>';
+    })
+    .replace(/(<tr>.*?<\/tr>\n?)+/g, m => {
+      const rows = m.match(/<tr>.*?<\/tr>/g) || [];
+      if (rows.length === 0) return m;
+      const header = rows[0].replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>');
+      const body = rows.slice(1).filter(r => !r.includes('---')).join('');
+      return `<table><thead>${header}</thead><tbody>${body}</tbody></table>`;
+    })
+    .replace(/^---+$/gm, '')
+    .replace(/<p><\/p>/g, '');
+}
+
+async function generateProgram() {
+  const d = collectData();
+
+  if (d.injuries.length === 0 && !d.medNotes) {
+    alert('Please add at least one injury or condition before generating the program.');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = true;
+  btnText.innerHTML = '<div class="spinner"></div> Generating...';
+
+  document.getElementById('emptyState').style.display = 'none';
+  const reportArea = document.getElementById('reportArea');
+  reportArea.style.display = 'block';
+
+  const now = new Date().toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
+
+  reportArea.innerHTML = `
+    <div class="report-header">
+      <div>
+        <div class="report-title">Rehabilitation <span>Program</span></div>
+        <div class="report-meta">Generated ${now} &mdash; ADF PTI Rehab Planner</div>
+      </div>
+      <div class="report-actions">
+        <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+    ${buildMemberCard(d)}
+    <div class="program-content" id="streamTarget"><p class="cursor"> </p></div>
+    <div class="disclaimer">
+      This rehabilitation program is AI-generated as a planning aid for qualified PTIs. It does not replace the clinical judgment of a physiotherapist or medical officer. All programs must be reviewed by appropriate medical personnel before implementation. If in doubt, escalate to the unit MO or refer to a Defence physiotherapist.
+    </div>`;
+
+  const streamTarget = document.getElementById('streamTarget');
+  let fullText = '';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        stream: true,
+        messages: [{ role: 'user', content: buildPrompt(d) }]
+      })
+    });
+
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              fullText += parsed.delta.text;
+              streamTarget.innerHTML = '<div class="cursor">' + renderMarkdown(fullText) + '</div>';
+              streamTarget.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+          } catch {}
+        }
+      }
+    }
+
+    // Final render without cursor
+    streamTarget.innerHTML = renderMarkdown(fullText);
+
+  } catch (err) {
+    streamTarget.innerHTML = `
+      <div class="caution-box">
+        <strong>Error generating program.</strong><br>
+        ${err.message}<br><br>
+        <strong>Note:</strong> This tool requires an Anthropic API key to be configured. If you're hosting this on GitHub Pages, please ensure you have set up a backend proxy or are using a valid API key in your deployment configuration.
+      </div>`;
+  }
+
+  btn.disabled = false;
+  btnText.textContent = 'Regenerate Program';
+}
+</script>
+</body>
+</html>
